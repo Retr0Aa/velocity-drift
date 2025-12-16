@@ -1,5 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 
+import { skins } from "../skins";
+
+const skinId = localStorage.getItem("equippedSkin") || "classic";
+const equippedSkin =
+  skins.find(s => s.id === skinId) || skins[0];
+
 export default function Game() {
   const canvasRef = useRef(null);
 
@@ -11,6 +17,8 @@ export default function Game() {
   const score = useRef(0);
 
   const [dead, setDead] = useState(false);
+
+  const skinId = localStorage.getItem("equippedSkin") || "default";
 
   const BASE_SPEED = 0.6;
   const MAX_SPEED = 1.6;
@@ -162,6 +170,10 @@ export default function Game() {
       ctx.shadowBlur = 10;
       ctx.strokeStyle = "white";
       ctx.lineWidth = 4;
+
+      ctx.strokeStyle = equippedSkin.color;
+      ctx.shadowColor = equippedSkin.color;
+
       ctx.beginPath();
       ctx.moveTo(-12, -12);
       ctx.lineTo(-12, 12);
