@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from "react";
 
 import { skins } from "../skins";
 
+const deathSound = new Audio("/sounds/explosion.wav");
+const pickupSound = new Audio("/sounds/pickupCoin.wav");
+
 const skinId = localStorage.getItem("equippedSkin") || "classic";
 const equippedSkin =
   skins.find(s => s.id === skinId) || skins[0];
@@ -28,6 +31,8 @@ export default function Game() {
   const speed = useRef(BASE_SPEED);
 
   const particles = useRef([]);
+
+  const hasPlayedDeathSound = useRef(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -126,7 +131,16 @@ export default function Game() {
       collectibles.current.forEach(c => (c.x -= speed.current));
 
       obstacles.current = obstacles.current.filter(o => o.x + o.w > 0);
-      collectibles.current = collectibles.current.filter(c => c.x > -20);
+
+      collectibles.current = collectibles.current.filter(c => {
+        if (hitCircle(player.current, c)) {
+          score.current++;
+          pickupSound.currentTime = 0;
+          pickupSound.play();
+          return false;
+        }
+        return true;
+      });
 
       if (Math.abs(player.current.targetY - player.current.y) > 0.5 && !dead) {
         particles.current.push({
@@ -139,6 +153,12 @@ export default function Game() {
 
       for (const o of obstacles.current) {
         if (hit(player.current, o)) {
+          if (!hasPlayedDeathSound.current) {
+            hasPlayedDeathSound.current = true;
+            deathSound.currentTime = 0;
+            deathSound.play();
+          }
+
           mouse.current.down = false;
           speed.current = 0;
           setDead(true);
