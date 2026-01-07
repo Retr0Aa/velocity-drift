@@ -13,8 +13,12 @@ export default function Game() {
   const canvasRef = useRef(null);
 
   const player = useRef({ x: 160, y: 300, targetY: 300, size: 24 });
+
   const obstacles = useRef([]);
   const collectibles = useRef([]);
+  const particles = useRef([]);
+  const portals = useRef([]);
+
   const keys = useRef({});
   const mouse = useRef({ down: false });
   const score = useRef(0);
@@ -30,13 +34,17 @@ export default function Game() {
   const LERP_SPEED = 0.035;
   const speed = useRef(BASE_SPEED);
 
-  const particles = useRef([]);
 
   const hasPlayedDeathSound = useRef(false);
+
+  const direction = useRef(1); // 1 = right→left, -1 = left→right
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
+
+    const portalImg = new Image();
+    portalImg.src = "/images/portal.png";
 
     function resetGame() {
       obstacles.current = [];
@@ -71,18 +79,23 @@ export default function Game() {
     let lastSpawn = 0;
     let lastTime = performance.now();
 
-    function spawnWallPair() {
-      const gapY = 80 + Math.random() * (canvas.height - GAP_SIZE - 160);
-      const x = canvas.width + Math.random() * 400;
-      obstacles.current.push(
-        { x, y: 0, w: 30, h: gapY, color: "gray" },
-        { x, y: gapY + GAP_SIZE, w: 30, h: canvas.height, color: "gray" }
-      );
+    function spawnX() {
+      if (direction.current === 1) return canvas.width + 20 + Math.random() * 200; // right side
+      else return -20 - Math.random() * 200; // left side
+    }
+
+    function spawnPortal() {
+      portals.current.push({
+        x: spawnX(),
+        y: 100 + Math.random() * (canvas.height - 200),
+        w: 32,
+        h: 80
+      });
     }
 
     function spawnEnemy() {
       obstacles.current.push({
-        x: canvas.width + Math.random() * 400,
+        x: spawnX(),
         y: Math.random() * (canvas.height - 30),
         w: 22,
         h: 22,
@@ -92,9 +105,18 @@ export default function Game() {
       });
     }
 
+    function spawnWallPair() {
+      const gapY = 80 + Math.random() * (canvas.height - GAP_SIZE - 160);
+      const x = spawnX();
+      obstacles.current.push(
+        { x, y: 0, w: 30, h: gapY, color: "gray" },
+        { x, y: gapY + GAP_SIZE, w: 30, h: canvas.height, color: "gray" }
+      );
+    }
+
     function spawnCollectible() {
       collectibles.current.push({
-        x: canvas.width + Math.random() * 400,
+        x: spawnX(),
         y: Math.random() * (canvas.height - 20),
         r: 6
       });
@@ -127,10 +149,17 @@ export default function Game() {
       player.current.y += (player.current.targetY - player.current.y) * LERP_SPEED;
       player.current.y = Math.max(0, Math.min(canvas.height - player.current.size, player.current.y));
 
-      obstacles.current.forEach(o => (o.x -= speed.current));
-      collectibles.current.forEach(c => (c.x -= speed.current));
+      obstacles.current.forEach(o => (o.x -= speed.current * direction.current));
+      collectibles.current.forEach(c => (c.x -= speed.current * direction.current));
 
-      obstacles.current = obstacles.current.filter(o => o.x + o.w > 0);
+      obstacles.current = obstacles.current.filter(
+        o => o.x + o.w > -200 && o.x < canvas.width + 200
+      );
+
+      portals.current.forEach(p => (p.x -= speed.current * direction.current));
+      portals.current = portals.current.filter(
+        p => p.x + p.w > -100 && p.x < canvas.width + 100
+      );
 
       collectibles.current = collectibles.current.filter(c => {
         if (hitCircle(player.current, c)) {
@@ -144,7 +173,7 @@ export default function Game() {
 
       if (Math.abs(player.current.targetY - player.current.y) > 0.5 && !dead) {
         particles.current.push({
-          x: player.current.x - 10,
+          x: player.current.x - 10 * direction.current,
           y: player.current.y,
           alpha: 0.5,
           size: 6 + Math.random() * 4
@@ -166,6 +195,23 @@ export default function Game() {
         }
       }
 
+      for (const p of portals.current) {
+        if (hit(player.current, p)) {
+          direction.current *= -1;
+
+          player.current.x =
+            direction.current === 1 ? 160 : canvas.width - 160;
+
+          portals.current = [];
+          obstacles.current = [];
+          collectibles.current = [];
+          particles.current = [];
+
+          lastSpawn = 0; // FORCE spawn next frame
+          break;
+        }
+      }
+
       collectibles.current = collectibles.current.filter(c => {
         if (hitCircle(player.current, c)) {
           score.current++;
@@ -175,7 +221,7 @@ export default function Game() {
       });
 
       particles.current.forEach(p => {
-        p.x -= speed.current;       // move left with game
+        p.x -= speed.current * direction.current;       // move left with game
         p.size *= 0.95;             // shrink
         p.alpha *= 0.95;            // fade
       });
@@ -185,7 +231,16 @@ export default function Game() {
     function drawRocket() {
       ctx.save();
       ctx.translate(player.current.x, player.current.y);
-      ctx.rotate(Math.atan2(player.current.targetY - player.current.y, 140));
+
+      const dir = direction.current;
+
+      ctx.rotate(
+        Math.atan2(
+          player.current.targetY - player.current.y,
+          140 * dir
+        )
+      );
+
       ctx.shadowColor = "white";
       ctx.shadowBlur = 10;
       ctx.strokeStyle = "white";
@@ -245,6 +300,15 @@ export default function Game() {
         ctx.restore();
       });
 
+      portals.current.forEach(p => {
+        ctx.save();
+        ctx.shadowColor = "purple";
+        ctx.shadowBlur = 20;
+        ctx.fillStyle = "purple";
+        ctx.drawImage(portalImg, p.x, p.y, p.w, p.h);
+        ctx.restore();
+      });
+
       ctx.fillStyle = "white";
       ctx.font = "20px monospace";
       ctx.fillText(`Score: ${score.current}`, 20, 30);
@@ -256,9 +320,11 @@ export default function Game() {
 
       if (!dead && time - lastSpawn > 1200) {
         const r = Math.random();
-        if (r < 0.4) spawnEnemy();
-        else if (r < 0.8) spawnWallPair();
-        else spawnCollectible();
+        if (r < 0.25) spawnEnemy();
+        else if (r < 0.50) spawnWallPair();
+        else if (r < 0.70) spawnCollectible();
+        else spawnPortal();
+
         lastSpawn = time;
       }
 
