@@ -27,7 +27,7 @@ export default function Game() {
 
   const skinId = localStorage.getItem("equippedSkin") || "default";
 
-  const BASE_SPEED = 0.6;
+  const BASE_SPEED = 1.0;
   const MAX_SPEED = 1.6;
   const SPEED_RAMP = 0.00002;
   const GAP_SIZE = 230;
