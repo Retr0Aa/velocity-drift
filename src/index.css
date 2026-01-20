@@ -1,22 +1,82 @@
 :root {
-  --color-background: #1e1e1e;
   --color-text: #ffffff;
+
+  --color-primary: #1e1e1e;
+}
+
+@font-face {
+  font-family: "LeagueGothic";
+  src: url("/fonts/LeagueGothic-Regular-VariableFont_wdth.ttf") format("truetype");
+  font-weight: 100 900;
+  font-stretch: 75% 125%;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "BuiltTitling";
+  src: url("fonts/built-titling/built titling rg.otf") format("opentype");
+  font-weight: 100 900;
+  font-stretch: 75% 125%;
+  font-style: normal;
 }
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--color-background);
+  background: #2A7B9B;
+  background: linear-gradient(60deg, #411A34 0%, #1e1e1e 30%, #1e1e1e 50%, #21514E 100%);
   color: var(--color-text);
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   overflow: hidden;
+  
+  background-color: #1e1e1e;
+  background-image: 
+    radial-gradient(circle at top right, #045f59cc, transparent 50%),
+    radial-gradient(circle at bottom left, rgba(65, 26, 52, 0.8), transparent 30%);
+  
+  color: var(--color-text);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+  position: relative; /* Necessary for the dots pseudo-element */
+}
+
+/* The Dot Pattern Layer */
+body::before {
+  content: "";
+  position: absolute;
+  
+  /* Make the layer significantly larger than the screen */
+  width: 150vmax; 
+  height: 150vmax;
+  
+  /* Center it so the rotation doesn't pull it off-screen */
+  top: 50%;
+  left: 50%;
+  
+  /* Rotate the grid and center it */
+  transform: translate(-50%, -50%) rotate(15deg);
+
+  /* Creates the dots using a repeating radial gradient */
+  background-image: radial-gradient(rgba(255, 255, 255, 0.15) 5px, transparent 1.5px);
+  background-size: 18px 18px;
+
+  /* This mask makes the dots only visible in the corners, matching your image */
+  -webkit-mask-image: 
+    radial-gradient(circle at top right, black 0%, transparent 50%),
+    radial-gradient(circle at bottom left, black 0%, transparent 30%);
+  mask-image: 
+    radial-gradient(circle at top right, black 0%, transparent 50%),
+    radial-gradient(circle at bottom left, black 0%, transparent 30%);
 }
 
 #root {
@@ -162,4 +222,47 @@ button:disabled:hover {
 .skin-card.equipped:hover {
   transform: scale(1.05);
   color: white;
+}
+
+.main-menu-buttons {
+  position: absolute;
+  left: 0;
+  bottom: 50px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.btn {
+  background-color: transparent;
+  border: transparent;
+
+  text-align: left;
+
+  font-size: 80pt;
+  font-weight: bolder;
+  
+  font-family: "BuiltTitling", sans-serif;
+
+  height: 100px;
+}
+
+.btn:hover {
+  background-color: transparent;
+  color: white;
+}
+
+.main-menu-title {
+  position: absolute;
+  top: -30px;
+  right: 100px;
+
+  width: 400px;
+  height: 100px;
+
+  text-align: right;
+
+  font-family: "LeagueGothic";
+  font-style: italic;
+  font-size: 100pt !important;
 }

@@ -1,16 +1,19 @@
 export default function MainMenu() {
     return (
         <div className="main-menu">
-            <h1>Velocity Drift</h1>
+            <h1 className="main-menu-title">Velocity Drift</h1>
 
-            <button onClick={() => window.location.href = "/game"}>Start Game</button>
-            <button className="btn-purple" onClick={() => window.location.href = "/skins"}>Skins</button>
-
-            <div className="best-score">
-                <h2>Best Score: {localStorage.getItem('bestScore') || 0}</h2>
+            <div className="main-menu-buttons">
+                <button className="btn" onClick={() => window.location.href = "/game"}>PLAY</button>
+                <button className="btn btn-purple" onClick={() => window.location.href = "/skins"}>SKINS</button>
+                <button className="btn btn-purple" onClick={() => window.location.href = "/skins"}>OPTIONS</button>
             </div>
 
-            <p>Made with React + Vite by Alexander Buchkov</p>
+            {/* <div className="best-score">
+                <h2>Best Score: {localStorage.getItem('bestScore') || 0}</h2>
+            </div> */}
+
+            {/* <p>Made with React + Vite by Alexander Buchkov</p> */}
         </div>
     );
 }
