@@ -6,7 +6,7 @@ export default function MainMenu() {
             <div className="main-menu-buttons">
                 <button className="btn" onClick={() => window.location.href = "/game"}>PLAY</button>
                 <button className="btn btn-purple" onClick={() => window.location.href = "/skins"}>SKINS</button>
-                <button className="btn btn-purple" onClick={() => window.location.href = "/skins"}>OPTIONS</button>
+                <button className="btn btn-purple" onClick={() => window.location.href = "/options"}>OPTIONS</button>
             </div>
 
             {/* <div className="best-score">

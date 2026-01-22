@@ -1,3 +1,4 @@
+import React from 'react';
 import { skins } from "../skins";
 
 export default function SkinsMenu() {
@@ -10,53 +11,50 @@ export default function SkinsMenu() {
   }
 
   return (
-    <div className="skins-menu">
-      <h1>Skins</h1>
-      <h2>Best Score: {bestScore}</h2>
+    <div className="options-screen skins-screen">
+      <div className="options-container">
+        <h1 className="title">Skins</h1>
 
-      <div className="skins-grid">
-        {skins.map(skin => {
-          const unlocked = bestScore >= skin.cost;
-          const isEquipped = equipped === skin.id;
+        <div className="skins-grid">
+          {skins.map(skin => {
+            const unlocked = bestScore >= skin.cost;
+            const isEquipped = equipped === skin.id;
 
-          return (
-            <button
-              key={skin.id}
-              className={`skin-card ${isEquipped ? "equipped" : ""}`}
-              disabled={!unlocked}
-              onClick={() => unlocked && equipSkin(skin.id)}
-            >
-              {/* preview */}
+            return (
               <div
-                className="skin-preview"
-                style={{ borderColor: skin.color }}
+                key={skin.id}
+                className={`skin-card-wrapper ${unlocked ? 'unlocked' : 'locked'}`}
+                onClick={() => unlocked && equipSkin(skin.id)}
               >
-                <svg width="40" height="40">
-                  <polygon
-                    points="5,5 5,35 35,20"
-                    fill="none"
-                    stroke={skin.color}
-                    strokeWidth="3"
-                  />
-                </svg>
+                <div className="skin-card">
+                  <div className="skin-preview">
+                    <svg width="60" height="60" viewBox="0 0 40 40">
+                      <polygon
+                        points="5,5 5,35 35,20"
+                        fill="none"
+                        stroke={true ? skin.color : "#444"}
+                        strokeWidth="3"
+                      />
+                    </svg>
+                  </div>
+                  <div className={`skin-status ${isEquipped ? "selected" : ""}`}>
+                    {isEquipped ? "SELECTED" : unlocked ? "CLAIMED" : skin.cost}
+                  </div>
+                </div>
+                {/* The shadow/offset effect seen in the image */}
+                <div className="card-shadow"></div>
               </div>
+            );
+          })}
+        </div>
 
-              {/* status */}
-              <div className={`skin-status ${isEquipped ? "green" : ""}`}>
-                {isEquipped
-                  ? "Equipped"
-                  : unlocked
-                  ? "Equip"
-                  : `Score ${skin.cost}`}
-              </div>
-            </button>
-          );
-        })}
+        <div className="footer">
+          <button onClick={() => (window.location.href = "/")} className="back-btn">
+            BACK
+          </button>
+        </div>
       </div>
-
-      <button className="btn-danger" onClick={() => (window.location.href = "/")}>
-        Back
-      </button>
+      <div className="overlay-dots"></div>
     </div>
   );
 }

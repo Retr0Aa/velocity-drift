@@ -1,0 +1,281 @@
+/* Container & Background */
+.options-screen {
+    color: #b3b3b3;
+    /* Light grey text */
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    padding: 60px 80px;
+    font-family: "LeagueGothic", "Arial Narrow", sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+.options-container {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    height: 93%;
+}
+
+/* Typography */
+.title {
+    font-size: 180px;
+    text-transform: uppercase;
+    margin: 0 0 40px 0;
+    line-height: 1;
+    color: #f0f0f0;
+}
+
+.options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+
+    font-family: "BuiltTitling", sans-serif;
+}
+
+.label,
+.menu-btn,
+.back-btn {
+    font-size: 60px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-align: left;
+
+    font-family: "BuiltTitling", sans-serif;
+}
+
+/* Controls Layout */
+.control {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.menu-btn,
+.back-btn {
+    background: none;
+    border: none;
+    color: #b3b3b3;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+
+    width: fit-content;
+
+    font-family: "BuiltTitling", sans-serif;
+}
+
+.menu-btn:hover {
+    background-color: transparent;
+    color: white;
+}
+
+/* Custom Slider Styling */
+.slider-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: 250px;
+    height: 4px;
+    background: #444;
+    outline: none;
+}
+
+/* The Thumb (The draggable part) */
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 35px;
+    height: 20px;
+    background: #888;
+    cursor: pointer;
+    clip-path: polygon(20% 0%, 100% 0%, 80% 100%, 0% 100%);
+    /* Slanted look */
+}
+
+.percentage {
+    font-size: 24px;
+    min-width: 50px;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    font-size: 30px;
+    gap: 10px;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: #b3b3b3;
+    font-size: 45px;
+    cursor: pointer;
+
+    width: fit-content;
+    height: fit-content;
+
+    margin: 0;
+    padding: 0;
+}
+
+.icon-btn:hover {
+    background-color: transparent;
+    color: white;
+}
+
+.separator {
+    color: #444;
+}
+
+/* Footer Positioning */
+.footer {
+    margin-top: auto;
+    /* Pushes Back button to bottom */
+    padding-bottom: 40px;
+}
+
+.back-btn {
+    font-size: 80px;
+    color: #f0f0f0 !important;
+}
+
+.credits-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; // Tight spacing like the image
+    font-family: "BuiltTitling", sans-serif;
+    text-transform: uppercase;
+}
+
+.credit-line {
+    font-size: 55px; // Slightly smaller than section labels
+    color: #f0f0f0;
+    letter-spacing: 1px;
+    line-height: 1.1;
+
+    .highlight {
+        color: #b3b3b3; // Greyer color for the names
+    }
+
+    &.indent {
+        padding-left: 120px; // Indents the "TEXTS" line under "FONTS"
+    }
+}
+
+/* Specific How to Play Styling */
+.instructions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-family: "BuiltTitling", sans-serif;
+    max-width: 90%;
+    /* Prevents text from hitting the edge of the screen */
+}
+
+.instruction-line {
+    font-size: 55px;
+    color: #f0f0f0;
+    /* White for the label */
+    letter-spacing: 1px;
+    line-height: 1.1;
+    text-transform: uppercase;
+
+    .highlight {
+        color: #b3b3b3;
+        /* Grey for the description text */
+    }
+}
+
+/* Ensure the title for this page doesn't wrap awkwardly */
+.how-to-play-screen .title {
+    font-size: 160px;
+    /* Slightly smaller than 'OPTIONS' to fit the longer text */
+    margin-bottom: 50px;
+}
+
+/* Skins Grid Layout */
+.skins-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.skin-card-wrapper {
+    position: relative;
+    width: 180px;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+
+    &:active {
+        transform: scale(0.95);
+    }
+
+    &.locked {
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+}
+
+.skin-card {
+    position: relative;
+    z-index: 2;
+    background: #1a1a1a;
+    border: 3px solid white;
+    height: 260px;
+    display: flex;
+    flex-direction: column;
+}
+
+.skin-preview {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 3px solid white;
+
+    width: 100%;
+}
+
+.skin-status {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "BuiltTitling", sans-serif;
+    font-size: 24px;
+    color: #b3b3b3; // Default "CLAIMED" color
+    letter-spacing: 1px;
+
+    &.selected {
+        color: #4df04d; // Green "SELECTED" color
+    }
+}
+
+/* The dark background offset effect */
+.card-shadow {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 1;
+    clip-path: polygon(0 0, 82% 0, 100% 12%, 100% 100%, 0 100%);
+    opacity: 0.5;
+}
+
+/* Adjust title for Skins page */
+.skins-screen .title {
+    font-size: 150px;
+    margin-bottom: 20px;
+}
